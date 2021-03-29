@@ -3,9 +3,15 @@ using UnityEngine;
 
 public class Player : NetworkBehaviour
 {
-	public float	moveSpeed	= 25.0f;
-	public float	rotateSpeed	= 20.0f;
-	public float	scrollSpeed	= 20.0f;
+	[Header("Speeds")]
+	public	float	moveSpeed	= 25.0f;
+	public	float	rotateSpeedHorizontal	= 20.0f;
+	public	float	rotateSpeedVertical		= 500.0f;
+	public	float	scrollSpeed	= 20.0f;
+
+	[Header("Max Rotation")]
+	public	float	minimumBound	= -80;
+	public	float	maximumBound	= 80;
 
 	private Camera	mainCamera;
 
@@ -14,7 +20,7 @@ public class Player : NetworkBehaviour
 		mainCamera = Camera.main;
 		mainCamera.transform.SetParent(transform);
 		mainCamera.transform.position		= transform.position;
-		mainCamera.transform.eulerAngles	= new Vector3(90, transform.eulerAngles.y, transform.eulerAngles.z);
+		mainCamera.transform.eulerAngles	= new Vector3(60, transform.eulerAngles.y, transform.eulerAngles.z);
 	}
 
 	private void Update()
@@ -28,12 +34,6 @@ public class Player : NetworkBehaviour
 		transform.Translate(transform.right * moveX, Space.World);
 		transform.Translate(transform.forward * moveY, Space.World);
 
-		if (Input.GetMouseButton(2))
-		{
-			transform.Rotate(0, Input.GetAxis("Mouse X") * rotateSpeed * Time.deltaTime, 0);
-			mainCamera.transform.Rotate(Input.GetAxis("Mouse Y") * rotateSpeed * Time.deltaTime * -1, 0, 0);
-		}
-
 		if (Input.GetMouseButtonDown(2))
 		{
 			Cursor.lockState = CursorLockMode.Locked;
@@ -43,6 +43,16 @@ public class Player : NetworkBehaviour
 		{
 			Cursor.lockState = CursorLockMode.None;
 			Cursor.visible = true;
+		}
+
+		if (Input.GetMouseButton(2))
+		{
+			transform.Rotate(0, Input.GetAxis("Mouse X") * rotateSpeedHorizontal, 0);
+
+			Vector3 newCameraEulerAngles = mainCamera.transform.localEulerAngles;
+			newCameraEulerAngles.x -= Input.GetAxis("Mouse Y") * rotateSpeedVertical * Time.deltaTime;
+			newCameraEulerAngles.x = Mathf.Clamp(newCameraEulerAngles.x, minimumBound, maximumBound);
+			mainCamera.transform.localEulerAngles = newCameraEulerAngles;
 		}
 
 		if (Input.mouseScrollDelta.y != 0)
