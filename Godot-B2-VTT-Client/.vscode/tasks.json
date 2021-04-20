@@ -7,8 +7,8 @@
 			"command": "scons",
 			"args": [
 				"platform=linux",
-			],
 				"-j16"
+			],
 			"group": "build"
 		},
         {
@@ -21,10 +21,7 @@
                 "platform=windows",
                 "-j16"
             ],
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            }
+            "group": "build"
         }
     ]
 }
