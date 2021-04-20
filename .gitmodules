@@ -1,4 +1,0 @@
-[submodule "Godot-B2-VTT-Client/godot-cpp"]
-	path = Godot-B2-VTT-Client/godot-cpp
-	url = https://github.com/godotengine/godot-cpp
-	branch = 3.0
