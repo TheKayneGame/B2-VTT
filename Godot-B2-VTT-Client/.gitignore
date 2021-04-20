@@ -1,3 +1,4 @@
 # Ignore all build files
+**/.sconsign.dblite
 **.os
 **.so
