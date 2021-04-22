@@ -8,16 +8,15 @@
 
 config_version=4
 
-_global_script_classes=[  ]
-_global_script_class_icons={
-
-}
-
 [application]
 
-config/name="B2 Vtt Client"
-run/main_scene="res://main.tscn"
+config/name="Godot-B2-VTT-Client"
+run/main_scene="res://scenes/main.tscn"
 config/icon="res://icon.png"
+
+[physics]
+
+common/enable_pause_aware_picking=true
 
 [rendering]
 

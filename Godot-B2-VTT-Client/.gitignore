@@ -1,8 +1,0 @@
-# Ignore all build files
-**/.sconsign.dblite
-**.os
-**.obj
-**.pdb
-**.idb
-B2-VTT-Client/bin/x11/**
-B2-VTT-Client/bin/win64/**
