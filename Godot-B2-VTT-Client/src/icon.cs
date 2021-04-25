@@ -40,14 +40,16 @@ public class icon : Area2D
 
     }
 
+    public void Initialise(){
+        
+    }
+
     public void _InputEvent(Viewport viewport, InputEvent @event, int shapeIdx)
     {
-        //GD.Print("event?");
+
         Vector2 mousePos = (@event as InputEventMouse).Position;
         if (!GetTree().IsInputHandled() && IsOnTop())
         {
-            
-
             if (@event.IsActionPressed("token_interact_primary"))
             {
                 clickPos = Position - mousePos;
@@ -65,11 +67,9 @@ public class icon : Area2D
                 GD.Print("Rotating", curMousePos);
                 GetTree().SetInputAsHandled();
                 Raise();
+
             }
-
         }
-
-
     }
     public override void _Input(InputEvent @event)
     {
@@ -85,7 +85,17 @@ public class icon : Area2D
             _rotating = false;
             fovCone.Visible = false;
         }
-        //GetTree().SetInputAsHandled();
+
+        if (@event.IsActionPressed("debug_2"))
+        {
+            if (IsOnTop())
+            {
+                GD.Print("debug_2");
+                QueueFree();
+                GetTree().SetInputAsHandled();
+            }
+
+        }
     }
 
     public void _MouseEnter()
@@ -97,18 +107,20 @@ public class icon : Area2D
 
     public void _MouseExit()
     {
-
         RemoveFromGroup("hovering");
         GD.Print("Exited!");
-
     }
 
 
     private bool IsOnTop()
     {
-        Godot.Collections.Array hoveringNodes  = GetTree().GetNodesInGroup("hovering");
-        Node2D topNode = hoveringNodes[hoveringNodes.Count - 1] as Node2D;
-        return object.ReferenceEquals(topNode, this);
+        return object.ReferenceEquals(GetTop(), this);
+    }
+
+    private object GetTop()
+    {
+        Godot.Collections.Array hoveringNodes = GetTree().GetNodesInGroup("hovering");
+        return hoveringNodes[hoveringNodes.Count - 1] as Node2D;
     }
 
 
