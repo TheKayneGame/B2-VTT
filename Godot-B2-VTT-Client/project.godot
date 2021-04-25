@@ -12,7 +12,17 @@ config_version=4
 
 config/name="Godot-B2-VTT-Client"
 run/main_scene="res://scenes/main.tscn"
+boot_splash/fullsize=false
+boot_splash/use_filter=false
 config/icon="res://icon.png"
+
+[editor_plugins]
+
+enabled=PoolStringArray(  )
+
+[global]
+
+mono=false
 
 [input]
 
@@ -26,6 +36,10 @@ token_interact_secondary={
 "events": [ Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"button_mask":0,"position":Vector2( 0, 0 ),"global_position":Vector2( 0, 0 ),"factor":1.0,"button_index":2,"pressed":false,"doubleclick":false,"script":null)
  ]
 }
+
+[mono]
+
+debugger_agent/wait_timeout=15000
 
 [physics]
 

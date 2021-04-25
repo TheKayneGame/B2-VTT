@@ -1,26 +1,13 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=2 format=2]
 
-[ext_resource path="res://src/icon.cs" type="Script" id=1]
-[ext_resource path="res://token.png" type="Texture" id=2]
-[ext_resource path="res://src/FOVCone.cs" type="Script" id=3]
+[ext_resource path="res://Prefabs/Token.tscn" type="PackedScene" id=1]
 
-[sub_resource type="CircleShape2D" id=1]
+[node name="Token" type="Node2D"]
 
-[node name="main" type="Node2D"]
+[node name="Token" parent="." instance=ExtResource( 1 )]
+position = Vector2( 100, 100 )
+rotation = 6.28318
 
-[node name="Area2D" type="Area2D" parent="."]
-script = ExtResource( 1 )
-
-[node name="Sprite" type="Sprite" parent="Area2D"]
-texture = ExtResource( 2 )
-
-[node name="CollisionBox" type="CollisionShape2D" parent="Area2D"]
-scale = Vector2( 10, 10 )
-shape = SubResource( 1 )
-
-[node name="ViewCone" type="Polygon2D" parent="Area2D"]
-color = Color( 0, 0, 0, 0.392157 )
-script = ExtResource( 3 )
-
-[connection signal="input_event" from="Area2D" to="Area2D" method="_InputEvent"]
-[connection signal="mouse_entered" from="Area2D" to="Area2D" method="_MouseEnter"]
+[node name="Token2" parent="." instance=ExtResource( 1 )]
+position = Vector2( 100, 100 )
+rotation = 1.5708
