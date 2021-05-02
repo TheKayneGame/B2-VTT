@@ -22,7 +22,6 @@ public class Tokens : Node2D
 
     public override void _Input(InputEvent @event)
     {
-
         if (@event.IsActionPressed("debug_1")){
             Area2D token = _tokenScene.Instance() as Area2D;
             AddChild(token);
