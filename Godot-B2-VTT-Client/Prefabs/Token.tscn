@@ -1,28 +1,36 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://src/Token.cs" type="Script" id=1]
 [ext_resource path="res://src/FOVCone.cs" type="Script" id=2]
-[ext_resource path="res://token.png" type="Texture" id=3]
+[ext_resource path="res://Test Assets/icon.png" type="Texture" id=3]
 
 [sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 1, 1 )
 
-[node name="Token" type="Area2D"]
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 1, 1 )
+
+[node name="Token" type="KinematicBody2D"]
 script = ExtResource( 1 )
+
+[node name="Area" type="Area2D" parent="."]
+
+[node name="Collision" type="CollisionShape2D" parent="Area"]
+scale = Vector2( 22.5, 22.5 )
+shape = SubResource( 1 )
 
 [node name="ViewCone" type="Polygon2D" parent="."]
 visible = false
 color = Color( 0, 0, 0, 0.392157 )
 script = ExtResource( 2 )
 
-[node name="CollisionBox" type="CollisionShape2D" parent="."]
-position = Vector2( -0.471939, 0.117981 )
-scale = Vector2( 16, 16 )
-shape = SubResource( 1 )
-
 [node name="Sprite" type="Sprite" parent="."]
-scale = Vector2( 1, 1 )
 texture = ExtResource( 3 )
 
-[connection signal="input_event" from="." to="." method="_InputEvent"]
-[connection signal="mouse_entered" from="." to="." method="_MouseEnter"]
-[connection signal="mouse_exited" from="." to="." method="_MouseExit"]
+[node name="Collision" type="CollisionShape2D" parent="."]
+scale = Vector2( 22.5, 22.5 )
+shape = SubResource( 2 )
+
+[connection signal="input_event" from="Area" to="." method="_InputEvent"]
+[connection signal="mouse_entered" from="Area" to="." method="_MouseEnter"]
+[connection signal="mouse_exited" from="Area" to="." method="_MouseExit"]

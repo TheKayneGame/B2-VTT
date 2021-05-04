@@ -1,0 +1,23 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://Test Assets/testmap.jpg" type="Texture" id=1]
+[ext_resource path="res://src/Grid.cs" type="Script" id=2]
+[ext_resource path="res://src/Map.cs" type="Script" id=3]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 675, 675 )
+
+[node name="Map" type="Area2D"]
+script = ExtResource( 3 )
+
+[node name="Texture" type="Sprite" parent="."]
+texture = ExtResource( 1 )
+centered = false
+
+[node name="Collider" type="CollisionShape2D" parent="."]
+position = Vector2( 675, 675 )
+shape = SubResource( 1 )
+
+[node name="Grid" type="Node2D" parent="."]
+script = ExtResource( 2 )
+CellSize = 45

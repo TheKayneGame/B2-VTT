@@ -1,18 +1,22 @@
 using Godot;
 using System;
-
-public class Token : Area2D
+using System.Linq;
+public class Token : Node2D
 {
     // Declare member variables here. Examples:
     [Export]
     public string DragGroup = "";
     private bool _dragging = false;
     private bool _rotating = false;
+    private bool _freeMove = false;
     private Vector2 clickPos;
     private Vector2 curMousePos;
     private Sprite sprite;
     private Polygon2D fovCone;
-    private CollisionShape2D collisionBox;
+    private Area2D area;
+    private CollisionShape2D areaCollision;
+    private KinematicBody2D body;
+    private CollisionShape2D bodyCollision;
     private Vector2 textureSize;
 
 
@@ -22,16 +26,32 @@ public class Token : Area2D
         //Connect("mouse_entered", this,)
         sprite = GetNode<Sprite>("Sprite");
         fovCone = GetNode<Polygon2D>("ViewCone");
-        collisionBox = GetNode<CollisionShape2D>("CollisionBox");
+        area = GetNode<Area2D>("Area");
+        areaCollision = GetNode<CollisionShape2D>("Collision");
+        body = GetNode<KinematicBody2D>("Body");
+        bodyCollision = GetNode<CollisionShape2D>("Collision");
+        
+
         textureSize = sprite.Texture.GetSize();
         //this.Scale= new Vector2(2,2);
+        FitSprite();
     }
 
     // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _Process(float delta)
     {
         if (_dragging)
+        {
+            var map = area.GetOverlappingAreas().Cast<Map>().FirstOrDefault(x => x.GetType() == typeof(Map));
+            if (map != null && !_freeMove){
+                Position = map.GetClosestGridPosition(GetViewport().GetMousePosition());
+                GD.Print(Position);
+                return;
+            }
             Position = GetViewport().GetMousePosition() + clickPos;
+        }
+        
+
 
         if (_rotating)
         {
@@ -42,13 +62,14 @@ public class Token : Area2D
 
     }
 
-    public void FitSprite(){
-        Vector2 nodeSize = new Vector2(collisionBox.Scale * 2);
+    public void FitSprite()
+    {
+        Vector2 nodeSize = new Vector2(bodyCollision.Scale*2);
         float imageScaleX = nodeSize.x / textureSize.x;
         float imageScaleY = nodeSize.y / textureSize.y;
 
         float imageScalar = (imageScaleX < imageScaleY) ? imageScaleX : imageScaleY;
-        sprite.Scale = new Vector2(imageScalar,imageScalar);
+        sprite.Scale = new Vector2(imageScalar, imageScalar);
     }
 
     public void _InputEvent(Viewport viewport, InputEvent @event, int shapeIdx)
@@ -57,13 +78,14 @@ public class Token : Area2D
         Vector2 mousePos = (@event as InputEventMouse).Position;
         if (!GetTree().IsInputHandled() && IsOnTop())
         {
+            
             if (@event.IsActionPressed("token_interact_primary"))
             {
                 clickPos = Position - mousePos;
                 _dragging = true;
                 GD.Print("Dragging Location: ", clickPos);
-                GetTree().SetInputAsHandled();
                 Raise();
+                return;
             }
 
             if (@event.IsActionPressed("token_interact_secondary"))
@@ -72,14 +94,28 @@ public class Token : Area2D
                 _rotating = true;
                 fovCone.Visible = true;
                 GD.Print("Rotating", curMousePos);
-                GetTree().SetInputAsHandled();
                 Raise();
-
+                return;
             }
         }
     }
     public override void _Input(InputEvent @event)
     {
+
+        if (IsOnTop())
+        {
+            if (@event.IsActionPressed("debug_2"))
+            {
+                
+                    GD.Print("debug_2");
+                    QueueFree();
+            }
+
+            if(@event.IsActionPressed("token_free_move"))
+            {
+                _freeMove = true;
+            }
+        }
 
         if (@event.IsActionReleased("token_interact_primary"))
         {
@@ -93,17 +129,9 @@ public class Token : Area2D
             fovCone.Visible = false;
         }
 
-        if (@event.IsActionPressed("debug_2"))
+        if(@event.IsActionReleased("token_free_move"))
         {
-            if (IsOnTop())
-            {
-                //crashes when called after spawn and mouse has not moved, because _MouseEnter is not called so this node is not added to the "hovering" group.
-                //Caus
-                GD.Print("debug_2");
-                QueueFree();
-                GetTree().SetInputAsHandled();
-            }
-
+            _freeMove = false;
         }
     }
 

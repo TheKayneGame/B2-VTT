@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/token.png-1a97fd00d4d98c079a6863e37b847886.stex"
+path="res://.import/token.png-12cc35a572cf0f92ae15012c1e23bf6a.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://token.png"
-dest_files=[ "res://.import/token.png-1a97fd00d4d98c079a6863e37b847886.stex" ]
+source_file="res://Test Assets/token.png"
+dest_files=[ "res://.import/token.png-12cc35a572cf0f92ae15012c1e23bf6a.stex" ]
 
 [params]
 
