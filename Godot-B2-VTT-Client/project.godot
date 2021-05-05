@@ -14,7 +14,7 @@ config/name="Godot-B2-VTT-Client"
 run/main_scene="res://scenes/main.tscn"
 boot_splash/fullsize=false
 boot_splash/use_filter=false
-config/icon="res://Test Assets/icon.png"
+config/icon="res://Test/Assets/icon.png"
 
 [global]
 

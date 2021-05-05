@@ -1,8 +1,8 @@
 [gd_scene load_steps=6 format=2]
 
-[ext_resource path="res://src/Token.cs" type="Script" id=1]
-[ext_resource path="res://src/FOVCone.cs" type="Script" id=2]
-[ext_resource path="res://Test Assets/icon.png" type="Texture" id=3]
+[ext_resource path="res://src/Token/Token.cs" type="Script" id=1]
+[ext_resource path="res://src/Token/FOVCone.cs" type="Script" id=2]
+[ext_resource path="res://Test/Assets/testmap.jpg" type="Texture" id=3]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 1, 1 )

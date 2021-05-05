@@ -7,7 +7,7 @@ public class Tokens : Node2D
     // private int a = 2;
     // private string b = "text";
     
-    private PackedScene _tokenScene = GD.Load<PackedScene>("res://Prefabs/Token.tscn");
+    private PackedScene _tokenScene = GD.Load<PackedScene>("res://src/Token/Token.tscn");
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
@@ -23,9 +23,9 @@ public class Tokens : Node2D
     public override void _Input(InputEvent @event)
     {
         if (@event.IsActionPressed("debug_1")){
-            Node2D token = _tokenScene.Instance() as Node2D;
+            Token token = _tokenScene.Instance() as Token;
             AddChild(token);
-            token.Position = GetViewport().GetMousePosition();
+            token.TargetPos = GetViewport().GetMousePosition();
         }
     }
 

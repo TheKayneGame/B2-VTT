@@ -1,7 +1,7 @@
 using Godot;
 using System;
 using System.Linq;
-public class Token : Node2D
+public class Token : KinematicBody2D
 {
     // Declare member variables here. Examples:
     [Export]
@@ -11,6 +11,7 @@ public class Token : Node2D
     private bool _freeMove = false;
     private Vector2 clickPos;
     private Vector2 curMousePos;
+    public Vector2 TargetPos {get; set;}
     private Sprite sprite;
     private Polygon2D fovCone;
     private Area2D area;
@@ -21,6 +22,7 @@ public class Token : Node2D
 
 
     // Called when the node enters the scene tree for the first time.
+    
     public override void _Ready()
     {
         //Connect("mouse_entered", this,)
@@ -28,11 +30,12 @@ public class Token : Node2D
         fovCone = GetNode<Polygon2D>("ViewCone");
         area = GetNode<Area2D>("Area");
         areaCollision = GetNode<CollisionShape2D>("Collision");
-        body = GetNode<KinematicBody2D>("Body");
+        //body = GetNode<KinematicBody2D>("Body");
         bodyCollision = GetNode<CollisionShape2D>("Collision");
         
-
         textureSize = sprite.Texture.GetSize();
+
+        
         //this.Scale= new Vector2(2,2);
         FitSprite();
     }
@@ -40,18 +43,27 @@ public class Token : Node2D
     // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _Process(float delta)
     {
+        
+
+    }
+
+    public override void _PhysicsProcess(float delta)
+    {
         if (_dragging)
         {
             var map = area.GetOverlappingAreas().Cast<Map>().FirstOrDefault(x => x.GetType() == typeof(Map));
             if (map != null && !_freeMove){
-                Position = map.GetClosestGridPosition(GetViewport().GetMousePosition());
+                TargetPos = map.GetClosestGridPosition(GetViewport().GetMousePosition());                
                 GD.Print(Position);
-                return;
+                
             }
-            Position = GetViewport().GetMousePosition() + clickPos;
+            else {
+                TargetPos = GetViewport().GetMousePosition() + clickPos;
+            }
+            
         }
         
-
+        Position = Position.LinearInterpolate(TargetPos, delta*10f);
 
         if (_rotating)
         {
@@ -59,7 +71,6 @@ public class Token : Node2D
             fovCone.RotationDegrees = (float)Math.Round(((180 / Math.PI) * angle) / 90) * 90;
             GD.Print(angle);
         }
-
     }
 
     public void FitSprite()
@@ -69,6 +80,7 @@ public class Token : Node2D
         float imageScaleY = nodeSize.y / textureSize.y;
 
         float imageScalar = (imageScaleX < imageScaleY) ? imageScaleX : imageScaleY;
+        
         sprite.Scale = new Vector2(imageScalar, imageScalar);
     }
 
