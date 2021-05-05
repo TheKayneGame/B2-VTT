@@ -58,7 +58,7 @@ public class Token : KinematicBody2D
                 
             }
             else {
-                TargetPos = GetViewport().GetMousePosition() + clickPos;
+                TargetPos = GetGlobalMousePosition() + clickPos;
             }
             
         }
@@ -87,13 +87,13 @@ public class Token : KinematicBody2D
     public void _InputEvent(Viewport viewport, InputEvent @event, int shapeIdx)
     {
 
-        Vector2 mousePos = (@event as InputEventMouse).Position;
+        Vector2 mousePos = GetGlobalMousePosition();
         if (!GetTree().IsInputHandled() && IsOnTop())
         {
             
             if (@event.IsActionPressed("token_interact_primary"))
             {
-                clickPos = Position - mousePos;
+                clickPos = GlobalPosition - mousePos;
                 _dragging = true;
                 GD.Print("Dragging Location: ", clickPos);
                 GetTree().SetInputAsHandled();
