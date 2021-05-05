@@ -53,7 +53,7 @@ public class Token : KinematicBody2D
         {
             var map = area.GetOverlappingAreas().Cast<Map>().FirstOrDefault(x => x.GetType() == typeof(Map));
             if (map != null && !_freeMove){
-                TargetPos = map.GetClosestGridPosition(GetViewport().GetMousePosition());                
+                TargetPos = map.GetClosestGridPosition(GetGlobalMousePosition());                
                 GD.Print(Position);
                 
             }
@@ -67,7 +67,7 @@ public class Token : KinematicBody2D
 
         if (_rotating)
         {
-            float angle = Position.AngleToPoint(GetViewport().GetMousePosition());
+            float angle = Position.AngleToPoint(GetGlobalMousePosition());
             fovCone.RotationDegrees = (float)Math.Round(((180 / Math.PI) * angle) / 90) * 90;
             GD.Print(angle);
         }
@@ -96,6 +96,7 @@ public class Token : KinematicBody2D
                 clickPos = Position - mousePos;
                 _dragging = true;
                 GD.Print("Dragging Location: ", clickPos);
+                GetTree().SetInputAsHandled();
                 Raise();
                 return;
             }
@@ -106,6 +107,7 @@ public class Token : KinematicBody2D
                 _rotating = true;
                 fovCone.Visible = true;
                 GD.Print("Rotating", curMousePos);
+                GetTree().SetInputAsHandled();
                 Raise();
                 return;
             }
@@ -118,8 +120,6 @@ public class Token : KinematicBody2D
         {
             if (@event.IsActionPressed("debug_2"))
             {
-                
-                    GD.Print("debug_2");
                     QueueFree();
             }
 
@@ -131,7 +131,6 @@ public class Token : KinematicBody2D
 
         if (@event.IsActionReleased("token_interact_primary"))
         {
-            GD.Print("Dropped");
             _dragging = false;
         }
 
@@ -150,14 +149,12 @@ public class Token : KinematicBody2D
     public void _MouseEnter()
     {
         AddToGroup("hovering");
-        GD.Print("Enter!");
 
     }
 
     public void _MouseExit()
     {
         RemoveFromGroup("hovering");
-        GD.Print("Exited!");
     }
 
 

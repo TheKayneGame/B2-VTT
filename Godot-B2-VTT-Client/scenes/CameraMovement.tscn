@@ -1,14 +1,11 @@
 [gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://icon.png" type="Texture" id=1]
-[ext_resource path="res://src/CameraMovement.cs" type="Script" id=2]
+[ext_resource path="res://Test/Assets/testmap.jpg" type="Texture" id=1]
+[ext_resource path="res://src/Camera/Camera.tscn" type="PackedScene" id=2]
 
 [node name="Node2D" type="Node2D"]
 
-[node name="Camera2D" type="Camera2D" parent="."]
-current = true
-script = ExtResource( 2 )
-speed = 100
+[node name="Camera2D" parent="." instance=ExtResource( 2 )]
 
 [node name="Sprite" type="Sprite" parent="."]
 texture = ExtResource( 1 )

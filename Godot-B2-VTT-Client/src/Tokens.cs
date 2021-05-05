@@ -25,7 +25,7 @@ public class Tokens : Node2D
         if (@event.IsActionPressed("debug_1")){
             Token token = _tokenScene.Instance() as Token;
             AddChild(token);
-            token.TargetPos = GetViewport().GetMousePosition();
+            token.TargetPos = GetGlobalMousePosition();
         }
     }
 
