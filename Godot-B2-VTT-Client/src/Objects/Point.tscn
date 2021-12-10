@@ -4,10 +4,10 @@
 [ext_resource path="res://src/Objects/Point.cs" type="Script" id=2]
 
 [sub_resource type="CircleShape2D" id=1]
-radius = 32.0
+radius = 48.0
 
 [node name="Point" type="Position2D"]
-scale = Vector2( 0.5, 0.5 )
+scale = Vector2( 0.2, 0.2 )
 script = ExtResource( 2 )
 
 [node name="Sprite" type="Sprite" parent="."]

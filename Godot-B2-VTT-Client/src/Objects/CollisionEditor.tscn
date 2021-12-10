@@ -6,3 +6,4 @@
 [node name="CollisionCreator" type="Node2D"]
 script = ExtResource( 2 )
 collisionScene = ExtResource( 1 )
+MouseColliderPath = NodePath("")

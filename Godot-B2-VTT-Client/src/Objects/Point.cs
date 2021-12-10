@@ -1,4 +1,5 @@
 using Godot;
+using Godot.Collections;
 using System;
 
 public class Point : Position2D
@@ -25,7 +26,7 @@ public class Point : Position2D
     public override void _Process(float delta)
     {
         if (dragging)
-            SetPointPosition(GetGlobalMousePosition());
+            SetPointPosition(GetParent<Node2D>().GetLocalMousePosition());
     }
 
     public void SetPointPosition(Vector2 pos)
@@ -34,17 +35,23 @@ public class Point : Position2D
         EmitSignal(nameof(Moved), pos);
     }
 
+    public void Delete()
+    {
+        EmitSignal(nameof(Deleted));
+        QueueFree();
+    }
+
 
 
     public void _MouseEntered()
     {
-        AddToGroup("hovering");
+        AddToGroup("PointHovering");
 
     }
 
     public void _MouseExited()
     {
-        RemoveFromGroup("hovering");
+        RemoveFromGroup("PointHovering");
     }
 
     public override void _UnhandledInput(InputEvent @event)
@@ -54,6 +61,15 @@ public class Point : Position2D
         {
             dragging = false;
         }
+    }
+
+    public Dictionary<object, object> ToDict()
+    {
+        return new Dictionary<object, object>(){
+                    {"PosX", Position.x},
+                    {"PosY", Position.y}
+        };
+
     }
 
 

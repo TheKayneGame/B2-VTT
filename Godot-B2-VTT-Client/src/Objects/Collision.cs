@@ -1,5 +1,5 @@
 using Godot;
-using System;
+using Godot.Collections;
 
 public class Collision : Node2D
 {
@@ -8,6 +8,8 @@ public class Collision : Node2D
     // private string b = "text";
 
     // Called when the node enters the scene tree for the first time.
+    [Signal]
+    public delegate void Moved(Vector2 pos);
     [Export]
     PackedScene pointScene;
 
@@ -45,6 +47,35 @@ public class Collision : Node2D
         segment.PointB = pointB;
         return segment;
     }
+
+    public Dictionary<object,object> toDict(){
+        return new Dictionary<object,object>() {
+            {"Points", pointsToDict()},
+            {"Segments", segemntsToDict()}
+        };
+
+    }
+
+    private Dictionary<object, object> pointsToDict(){
+        Array<Point> points = new Array<Point>(nodePoints.GetChildren());
+        Dictionary<object,object> pointsDict = new Dictionary<object,object>();
+        foreach (Point point in points)
+        {
+            pointsDict.Add(point.Name,point.ToDict());
+        }
+        return pointsDict;
+    }
+
+        private Dictionary<object, object> segemntsToDict(){
+        Array<Segment> segments = new Array<Segment>(nodeSegments.GetChildren());
+        Dictionary<object,object> pointsDict = new Dictionary<object,object>();
+        foreach (Segment segment in segments)
+        {
+            pointsDict.Add(segment.Name,segment.ToDict());
+        }
+        return pointsDict;
+    }
+
 
     //  // Called every frame. 'delta' is the elapsed time since the previous frame.
     //  public override void _Process(float delta)

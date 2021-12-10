@@ -13,7 +13,10 @@ public class CollisionEditor : Node2D
     [Export]
     PackedScene collisionScene;
 
-    Collision currentCollision;
+    [Export]
+    NodePath MouseColliderPath;
+
+    public Collision currentCollision;
 
     Point selectedPoint;
 
@@ -29,7 +32,7 @@ public class CollisionEditor : Node2D
 
     public override void _Ready()
     {
-        
+
     }
 
 
@@ -37,11 +40,14 @@ public class CollisionEditor : Node2D
     {
         if (movingPoint != null)
         {
-            movingPoint.SetPointPosition(currentCollision.GetLocalMousePosition());
+            Vector2 temppos = currentCollision.GetLocalMousePosition().Snapped(Vector2.One * 8);
+            movingPoint.SetPointPosition(temppos);
         }
+
     }
 
-    public void SetCurrentCollision(Node input){
+    public void SetCurrentCollision(Node input)
+    {
         currentCollision = input.GetNodeOrNull<Collision>("Collision");
         if (currentCollision == null)
         {
@@ -51,11 +57,17 @@ public class CollisionEditor : Node2D
 
     }
 
+
+
     public override void _UnhandledInput(InputEvent @event)
     {
         //Er gaan losse punten en segmenten bestaan, elk van deze segmenten zullen twee nodes refereren om zo hun dimensies te krijgen. zij verbinden ook de node's "onMoved" signaal met hun eigen update signaal.
         //Een segment bepaald voor zich zelf wat hij is en wat hij doet (is hij deur is hij raam, open of dicht) makkelijk te serialiseren.
         //tl;dr wolk van nodes met segmenten die ze verbinden. Tot morgen :)
+
+
+        Array pointHovering = GetTree().GetNodesInGroup("PointHovering");
+        Array segmentHovering = GetTree().GetNodesInGroup("SegmentHovering");
 
         if (currentCollision == null)
             return;
@@ -82,18 +94,28 @@ public class CollisionEditor : Node2D
 
             curMousePos = currentCollision.GetLocalMousePosition();
 
-            Array hovering = GetTree().GetNodesInGroup("hovering");
-            if (hovering.Count > 0)
+
+            if (pointHovering.Count > 0)
             {
                 if (movingPoint == null)
                 {
-                    movingPoint = hovering[hovering.Count - 1] as Point;
+                    movingPoint = pointHovering[pointHovering.Count - 1] as Point;
                     movingPoint.Raise();
                     draggingPoint = true;
                     return;
                 }
 
             }
+
+            if (segmentHovering.Count > 0)
+            {
+                Point tempNew = splitSegment(segmentHovering[segmentHovering.Count - 1] as Segment, currentCollision.GetLocalMousePosition());
+                //if (movingPoint == null)
+                return;
+                //tempNew
+
+            }
+
 
             if (selectedPoint == null)
             {
@@ -102,14 +124,15 @@ public class CollisionEditor : Node2D
             }
             else
             {
-                if (hovering.Count > 1)
+                if (pointHovering.Count > 1)
                 {
-                    Point newPoint = hovering[hovering.Count - 2] as Point;
-                    if (newPoint == selectedPoint){
+                    Point newPoint = pointHovering[pointHovering.Count - 2] as Point;
+                    if (newPoint == selectedPoint)
+                    {
                         dropMoving();
                         return;
                     }
-                        
+
                     movingSegment.PointB = newPoint;
                     movingPoint.QueueFree();
                     movingPoint = null;
@@ -133,7 +156,14 @@ public class CollisionEditor : Node2D
             if (selectedPoint != null)
             {
                 dropMoving();
+                return;
             }
+            if (pointHovering.Count > 0)
+            {
+                (pointHovering[0] as Point).Delete();
+
+            }
+
 
 
         }
@@ -160,6 +190,17 @@ public class CollisionEditor : Node2D
 
 
 
+    }
+
+    private Point splitSegment(Segment seg, Vector2 pos)
+    {
+        Point tempA = seg.PointA;
+        Point tempB = seg.PointB;
+        Point tempNew = currentCollision.AddPoint(pos);
+        currentCollision.AddSegment(tempA, tempNew);
+        currentCollision.AddSegment(tempB, tempNew);
+        seg.QueueFree();
+        return tempNew;
     }
 
     private void dropMoving()

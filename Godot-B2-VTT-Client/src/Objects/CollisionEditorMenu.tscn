@@ -76,7 +76,6 @@ margin_left = 161.0
 margin_right = 319.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
-selected = 0
 
 [node name="Button" type="Button" parent="MarginContainer/HBoxContainer/VBoxContainer/CollsionSelector"]
 margin_left = 323.0
@@ -84,6 +83,13 @@ margin_right = 374.0
 margin_bottom = 20.0
 text = "Select"
 
+[node name="SaveButton" type="Button" parent="MarginContainer/HBoxContainer/VBoxContainer"]
+margin_top = 68.0
+margin_right = 374.0
+margin_bottom = 88.0
+text = "Save"
+
 [connection signal="popup_hide" from="." to="." method="_onCollisionEditorMenuClose"]
 [connection signal="toggled" from="MarginContainer/HBoxContainer/VBoxContainer/EditorEnabled/CheckButton" to="." method="_onCheckButtonToggled"]
 [connection signal="pressed" from="MarginContainer/HBoxContainer/VBoxContainer/CollsionSelector/Button" to="." method="_onColissionSelected"]
+[connection signal="pressed" from="MarginContainer/HBoxContainer/VBoxContainer/SaveButton" to="." method="_onSavePressed"]

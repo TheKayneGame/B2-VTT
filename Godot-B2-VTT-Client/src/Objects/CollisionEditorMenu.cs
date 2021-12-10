@@ -45,6 +45,11 @@ public class CollisionEditorMenu : WindowDialog
         collisionEditor.QueueFree();
     }
 
+    public void _onSavePressed()
+    {
+        GD.Print(JSON.Print(collisionEditor.currentCollision.toDict()));
+    }
+
     public void _onColissionSelected(){
         collisionEditor.SetCurrentCollision(collidables[collsionSelectorDropdown.Selected]);
     }

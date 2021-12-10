@@ -1,10 +1,14 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://src/Tokens.cs" type="Script" id=1]
 [ext_resource path="res://src/Map/Map.tscn" type="PackedScene" id=2]
 [ext_resource path="res://src/Board.cs" type="Script" id=3]
 [ext_resource path="res://src/Camera/Camera.tscn" type="PackedScene" id=4]
 [ext_resource path="res://scenes/UILayer.cs" type="Script" id=5]
+
+[sub_resource type="SegmentShape2D" id=1]
+a = Vector2( -64, 128 )
+b = Vector2( -64, -192 )
 
 [node name="Board" type="Node2D"]
 script = ExtResource( 3 )
@@ -22,3 +26,8 @@ position = Vector2( 686, 494 )
 
 [node name="UILayer" type="CanvasLayer" parent="."]
 script = ExtResource( 5 )
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+shape = SubResource( 1 )
