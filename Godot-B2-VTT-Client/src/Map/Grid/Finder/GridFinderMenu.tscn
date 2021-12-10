@@ -1,0 +1,191 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://src/Map/Grid/Finder/GridFinderMenu.cs" type="Script" id=1]
+[ext_resource path="res://src/Map/Grid/Finder/GridFinder.tscn" type="PackedScene" id=2]
+
+[node name="GridFinderMenu" type="WindowDialog"]
+margin_right = 309.0
+margin_bottom = 183.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+offsetSpinXPath = NodePath("VBox/OffsetContainer/CoordContainer/XSpin")
+offsetSpinYPath = NodePath("VBox/OffsetContainer/CoordContainer/YSpin")
+sizeSpinXPath = NodePath("VBox/DimensionContainer/CoordContainer/XSpin")
+sizeSpinYPath = NodePath("VBox/DimensionContainer/CoordContainer/YSpin")
+gridFinderScene = ExtResource( 2 )
+
+[node name="VBox" type="VBoxContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 5.0
+margin_top = 5.0
+margin_right = -5.0
+margin_bottom = -5.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="OffsetContainer" type="HBoxContainer" parent="VBox"]
+margin_right = 299.0
+margin_bottom = 24.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="OffsetLabel" type="Label" parent="VBox/OffsetContainer"]
+margin_top = 5.0
+margin_right = 112.0
+margin_bottom = 19.0
+size_flags_horizontal = 3
+text = "Grid Offset:"
+
+[node name="CoordContainer" type="HBoxContainer" parent="VBox/OffsetContainer"]
+margin_left = 116.0
+margin_right = 299.0
+margin_bottom = 24.0
+
+[node name="XLabel" type="Label" parent="VBox/OffsetContainer/CoordContainer"]
+margin_top = 5.0
+margin_right = 12.0
+margin_bottom = 19.0
+size_flags_horizontal = 3
+text = "X:"
+align = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="XSpin" type="SpinBox" parent="VBox/OffsetContainer/CoordContainer"]
+margin_left = 16.0
+margin_right = 90.0
+margin_bottom = 24.0
+step = 0.5
+allow_greater = true
+allow_lesser = true
+
+[node name="YLabel" type="Label" parent="VBox/OffsetContainer/CoordContainer"]
+margin_left = 94.0
+margin_top = 5.0
+margin_right = 105.0
+margin_bottom = 19.0
+size_flags_horizontal = 3
+text = "Y:"
+align = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="YSpin" type="SpinBox" parent="VBox/OffsetContainer/CoordContainer"]
+margin_left = 109.0
+margin_right = 183.0
+margin_bottom = 24.0
+step = 0.5
+allow_greater = true
+allow_lesser = true
+
+[node name="DimensionContainer" type="HBoxContainer" parent="VBox"]
+margin_top = 28.0
+margin_right = 299.0
+margin_bottom = 52.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="DimensionLabel" type="Label" parent="VBox/DimensionContainer"]
+margin_top = 5.0
+margin_right = 112.0
+margin_bottom = 19.0
+size_flags_horizontal = 3
+text = "Grid Dimensions:"
+
+[node name="CoordContainer" type="HBoxContainer" parent="VBox/DimensionContainer"]
+margin_left = 116.0
+margin_right = 299.0
+margin_bottom = 24.0
+
+[node name="XLabel" type="Label" parent="VBox/DimensionContainer/CoordContainer"]
+margin_top = 5.0
+margin_right = 12.0
+margin_bottom = 19.0
+size_flags_horizontal = 3
+text = "X:"
+align = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="XSpin" type="SpinBox" parent="VBox/DimensionContainer/CoordContainer"]
+margin_left = 16.0
+margin_right = 90.0
+margin_bottom = 24.0
+step = 0.5
+allow_greater = true
+
+[node name="YLabel" type="Label" parent="VBox/DimensionContainer/CoordContainer"]
+margin_left = 94.0
+margin_top = 5.0
+margin_right = 105.0
+margin_bottom = 19.0
+size_flags_horizontal = 3
+text = "Y:"
+align = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="YSpin" type="SpinBox" parent="VBox/DimensionContainer/CoordContainer"]
+margin_left = 109.0
+margin_right = 183.0
+margin_bottom = 24.0
+step = 0.5
+allow_greater = true
+
+[node name="GridShowToggleContainer" type="HBoxContainer" parent="VBox"]
+margin_top = 56.0
+margin_right = 299.0
+margin_bottom = 96.0
+
+[node name="Label" type="Label" parent="VBox/GridShowToggleContainer"]
+margin_top = 13.0
+margin_right = 219.0
+margin_bottom = 27.0
+size_flags_horizontal = 3
+text = "Show Grid Pointers"
+
+[node name="ShowToggle" type="CheckButton" parent="VBox/GridShowToggleContainer"]
+margin_left = 223.0
+margin_right = 299.0
+margin_bottom = 40.0
+size_flags_vertical = 0
+
+[node name="OriginShowToggleContainer" type="HBoxContainer" parent="VBox"]
+margin_top = 100.0
+margin_right = 299.0
+margin_bottom = 140.0
+
+[node name="Label" type="Label" parent="VBox/OriginShowToggleContainer"]
+margin_top = 13.0
+margin_right = 219.0
+margin_bottom = 27.0
+size_flags_horizontal = 3
+text = "Show Grid Origin Pointer"
+
+[node name="ShowToggle" type="CheckButton" parent="VBox/OriginShowToggleContainer"]
+margin_left = 223.0
+margin_right = 299.0
+margin_bottom = 40.0
+size_flags_vertical = 0
+
+[node name="ApplyGridButton" type="Button" parent="VBox"]
+margin_top = 144.0
+margin_right = 299.0
+margin_bottom = 164.0
+text = "Apply Grid"
+
+[connection signal="value_changed" from="VBox/OffsetContainer/CoordContainer/XSpin" to="." method="_OnXOriginValueChanged"]
+[connection signal="value_changed" from="VBox/OffsetContainer/CoordContainer/YSpin" to="." method="_OnYOriginValueChanged"]
+[connection signal="value_changed" from="VBox/DimensionContainer/CoordContainer/XSpin" to="." method="_OnXSizeValueChanged"]
+[connection signal="value_changed" from="VBox/DimensionContainer/CoordContainer/YSpin" to="." method="_OnYSizeValueChanged"]
+[connection signal="toggled" from="VBox/GridShowToggleContainer/ShowToggle" to="." method="_OnGridShowToggleToggled"]
+[connection signal="toggled" from="VBox/OriginShowToggleContainer/ShowToggle" to="." method="_OnOriginShowToggleToggled"]
+[connection signal="pressed" from="VBox/ApplyGridButton" to="." method="_OnApplyGridButtonPressed"]

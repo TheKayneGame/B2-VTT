@@ -20,12 +20,14 @@ public class Tokens : Node2D
 //      
 //  }
 
-    public override void _Input(InputEvent @event)
+    public override void _UnhandledInput(InputEvent @event)
     {
         if (@event.IsActionPressed("debug_1")){
             Token token = _tokenScene.Instance() as Token;
             AddChild(token);
             token.TargetPos = GetGlobalMousePosition();
+            token.Position = GetGlobalMousePosition();
+            
         }
     }
 

@@ -3,7 +3,7 @@ using System;
 
 public class Camera : Godot.Camera2D
 {
-    [Export]
+	[Export]
 	public int speed = 40;
 	[Export]
 	public float zoomSpeed = 0.2f;
@@ -12,7 +12,7 @@ public class Camera : Godot.Camera2D
 	private Vector2 oldPos;
 	private Vector2 mousePos;
 	private Vector2 targetPos;
-	private float zoomFactor = 1;
+	private float zoomFactor = 0;
 	private float zoomTarget = 1;
 
 	public override void _PhysicsProcess(float delta)
@@ -40,8 +40,8 @@ public class Camera : Godot.Camera2D
 		Zoom = Zoom.LinearInterpolate(Vector2.One * zoomTarget, zoomSpeed); 
 	}
 
-	public override void _Input(InputEvent @event)
-    {
+	public override void _UnhandledInput(InputEvent @event)
+	{
 		InputEventMouse eventMouse = @event as InputEventMouse;
 		if (@event.IsActionPressed("camera_drag"))
 		{
@@ -66,8 +66,5 @@ public class Camera : Godot.Camera2D
 			zoomFactor += zoomSpeed;
 			zoomTarget = Mathf.Pow(2,zoomFactor);
 		}
-
-		;
-		GD.Print(Zoom);
-    }
+	}
 }

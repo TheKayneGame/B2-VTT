@@ -1,0 +1,89 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://src/Objects/CollisionEditorMenu.cs" type="Script" id=1]
+[ext_resource path="res://src/Objects/CollisionEditor.tscn" type="PackedScene" id=2]
+
+[node name="CollisionEditorMenu" type="WindowDialog"]
+visible = true
+margin_right = 384.0
+margin_bottom = 320.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+collisionEditorScene = ExtResource( 2 )
+collsionSelectorDropdownPath = NodePath("MarginContainer/HBoxContainer/VBoxContainer/CollsionSelector/Dropdown")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 5.0
+margin_top = 5.0
+margin_right = -5.0
+margin_bottom = -5.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
+margin_right = 374.0
+margin_bottom = 310.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer"]
+margin_right = 374.0
+margin_bottom = 310.0
+size_flags_horizontal = 3
+
+[node name="EditorEnabled" type="HBoxContainer" parent="MarginContainer/HBoxContainer/VBoxContainer"]
+margin_right = 374.0
+margin_bottom = 40.0
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="MarginContainer/HBoxContainer/VBoxContainer/EditorEnabled"]
+margin_top = 13.0
+margin_right = 185.0
+margin_bottom = 27.0
+size_flags_horizontal = 3
+text = "Editor Enabled:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CheckButton" type="CheckButton" parent="MarginContainer/HBoxContainer/VBoxContainer/EditorEnabled"]
+margin_left = 189.0
+margin_right = 374.0
+margin_bottom = 40.0
+size_flags_horizontal = 3
+
+[node name="CollsionSelector" type="HBoxContainer" parent="MarginContainer/HBoxContainer/VBoxContainer"]
+margin_top = 44.0
+margin_right = 374.0
+margin_bottom = 64.0
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="MarginContainer/HBoxContainer/VBoxContainer/CollsionSelector"]
+margin_top = 3.0
+margin_right = 157.0
+margin_bottom = 17.0
+size_flags_horizontal = 3
+text = "Edit mode:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Dropdown" type="OptionButton" parent="MarginContainer/HBoxContainer/VBoxContainer/CollsionSelector"]
+margin_left = 161.0
+margin_right = 319.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+selected = 0
+
+[node name="Button" type="Button" parent="MarginContainer/HBoxContainer/VBoxContainer/CollsionSelector"]
+margin_left = 323.0
+margin_right = 374.0
+margin_bottom = 20.0
+text = "Select"
+
+[connection signal="popup_hide" from="." to="." method="_onCollisionEditorMenuClose"]
+[connection signal="toggled" from="MarginContainer/HBoxContainer/VBoxContainer/EditorEnabled/CheckButton" to="." method="_onCheckButtonToggled"]
+[connection signal="pressed" from="MarginContainer/HBoxContainer/VBoxContainer/CollsionSelector/Button" to="." method="_onColissionSelected"]

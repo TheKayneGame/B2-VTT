@@ -11,7 +11,7 @@ public class Token : KinematicBody2D
     private bool _freeMove = false;
     private Vector2 clickPos;
     private Vector2 curMousePos;
-    public Vector2 TargetPos {get; set;}
+    public Vector2 TargetPos { get; set; }
     private Sprite sprite;
     private Polygon2D fovCone;
     private Area2D area;
@@ -22,7 +22,7 @@ public class Token : KinematicBody2D
 
 
     // Called when the node enters the scene tree for the first time.
-    
+
     public override void _Ready()
     {
         //Connect("mouse_entered", this,)
@@ -32,10 +32,10 @@ public class Token : KinematicBody2D
         areaCollision = GetNode<CollisionShape2D>("Collision");
         //body = GetNode<KinematicBody2D>("Body");
         bodyCollision = GetNode<CollisionShape2D>("Collision");
-        
+
         textureSize = sprite.Texture.GetSize();
 
-        
+
         //this.Scale= new Vector2(2,2);
         FitSprite();
     }
@@ -43,7 +43,7 @@ public class Token : KinematicBody2D
     // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _Process(float delta)
     {
-        
+
 
     }
 
@@ -52,18 +52,25 @@ public class Token : KinematicBody2D
         if (_dragging)
         {
             var map = area.GetOverlappingAreas().Cast<Map>().FirstOrDefault(x => x.GetType() == typeof(Map));
-            if (map != null && !_freeMove){
-                TargetPos = map.GetClosestGridPosition(GetGlobalMousePosition());                
-                GD.Print(Position);
-                
+            if (map != null && !_freeMove)
+            {
+                TargetPos = map.GetClosestGridPosition(GetGlobalMousePosition());
+                GD.Print($"{Position} {TargetPos}");
+
             }
-            else {
-                TargetPos = GetGlobalMousePosition() + clickPos;
+            else
+            {
+                TargetPos = GetGlobalMousePosition(); //+ clickPos;
             }
-            
+
         }
-        
-        Position = Position.LinearInterpolate(TargetPos, delta*10f);
+
+        //Position = Position.LinearInterpolate(TargetPos, delta * 10f);
+		
+
+		//GD.Print(temp.Length());
+
+		MoveAndSlide((TargetPos - Position) * 20f);
 
         if (_rotating)
         {
@@ -75,12 +82,12 @@ public class Token : KinematicBody2D
 
     public void FitSprite()
     {
-        Vector2 nodeSize = new Vector2(bodyCollision.Scale*2);
+        Vector2 nodeSize = new Vector2(bodyCollision.Scale * 2);
         float imageScaleX = nodeSize.x / textureSize.x;
         float imageScaleY = nodeSize.y / textureSize.y;
 
         float imageScalar = (imageScaleX < imageScaleY) ? imageScaleX : imageScaleY;
-        
+
         sprite.Scale = new Vector2(imageScalar, imageScalar);
     }
 
@@ -88,9 +95,9 @@ public class Token : KinematicBody2D
     {
 
         Vector2 mousePos = GetGlobalMousePosition();
-        if (!GetTree().IsInputHandled() && IsOnTop())
+        if (!GetTree().IsInputHandled())
         {
-            
+
             if (@event.IsActionPressed("token_interact_primary"))
             {
                 clickPos = GlobalPosition - mousePos;
@@ -113,21 +120,20 @@ public class Token : KinematicBody2D
             }
         }
     }
-    public override void _Input(InputEvent @event)
+    public override void _UnhandledInput(InputEvent @event)
     {
 
-        if (IsOnTop())
-        {
-            if (@event.IsActionPressed("debug_2"))
-            {
-                    QueueFree();
-            }
 
-            if(@event.IsActionPressed("token_free_move"))
-            {
-                _freeMove = true;
-            }
+        if (@event.IsActionPressed("debug_2"))
+        {
+            QueueFree();
         }
+
+        if (@event.IsActionPressed("token_free_move"))
+        {
+            _freeMove = true;
+        }
+
 
         if (@event.IsActionReleased("token_interact_primary"))
         {
@@ -140,7 +146,7 @@ public class Token : KinematicBody2D
             fovCone.Visible = false;
         }
 
-        if(@event.IsActionReleased("token_free_move"))
+        if (@event.IsActionReleased("token_free_move"))
         {
             _freeMove = false;
         }
@@ -148,13 +154,13 @@ public class Token : KinematicBody2D
 
     public void _MouseEnter()
     {
-        AddToGroup("hovering");
+        //AddToGroup("hovering");
 
     }
 
     public void _MouseExit()
     {
-        RemoveFromGroup("hovering");
+        //RemoveFromGroup("hovering");
     }
 
 
