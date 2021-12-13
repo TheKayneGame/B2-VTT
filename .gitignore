@@ -1,3 +1,9 @@
 godot/
 Godot-B2-VTT-Client/.mono/*
 Godot_v3.4-stable_mono_win64/*
+
+#Example maps
+Godot-B2-VTT-Client/bighaus.jpg
+Godot-B2-VTT-Client/bighaus.jpg.import
+Godot-B2-VTT-Client/haus.jpg
+Godot-B2-VTT-Client/haus.jpg.import

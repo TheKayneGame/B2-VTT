@@ -26,7 +26,9 @@ public class CollisionEditor : Node2D
 
     Segment movingSegment;
 
-    bool draggingPoint;
+    bool alternativeHold;
+
+    bool creatingWall;
 
     Vector2 curMousePos;
 
@@ -65,6 +67,9 @@ public class CollisionEditor : Node2D
         //Een segment bepaald voor zich zelf wat hij is en wat hij doet (is hij deur is hij raam, open of dicht) makkelijk te serialiseren.
         //tl;dr wolk van nodes met segmenten die ze verbinden. Tot morgen :)
 
+        //todo Add Existing connection check
+
+        curMousePos = currentCollision.GetLocalMousePosition();
 
         Array pointHovering = GetTree().GetNodesInGroup("PointHovering");
         Array segmentHovering = GetTree().GetNodesInGroup("SegmentHovering");
@@ -76,135 +81,101 @@ public class CollisionEditor : Node2D
         if (@event.IsActionPressed("token_interact_primary"))
         {
 
-            // Physics2DDirectSpaceState space = GetWorld2d().DirectSpaceState;
-            // Dictionary temp = space.IntersectRay(new Vector2(), GetGlobalMousePosition());
-            // if (temp.Count > 0)
-            // {
-            //     Node nodeUnderMouse = (temp["collider"] as Node);
-            //     if (nodeUnderMouse.IsInGroup("CollisionPoint"))
-            //     {
-            //         if (movingPoint == null){
-            //             movingPoint = nodeUnderMouse as Point;
-            //             draggingPoint = true;
-            //             return;
-            //         }
 
-            //     }
-            // }
+            if (pointHovering.Count > 1)
+            {
+                if (movingPoint != null)
+                    setToPoint(pointHovering[0] as Point);
+            }
 
-            curMousePos = currentCollision.GetLocalMousePosition();
-
-
+            
             if (pointHovering.Count > 0)
             {
-                if (movingPoint == null)
-                {
-                    movingPoint = pointHovering[pointHovering.Count - 1] as Point;
-                    movingPoint.Raise();
-                    draggingPoint = true;
-                    return;
-                }
-
-            }
-
-            if (segmentHovering.Count > 0)
-            {
-                Point tempNew = splitSegment(segmentHovering[segmentHovering.Count - 1] as Segment, currentCollision.GetLocalMousePosition());
-                //if (movingPoint == null)
+                pickupPoint(pointHovering[0] as Point);
                 return;
-                //tempNew
-
             }
-
 
             if (selectedPoint == null)
             {
-
-                selectedPoint = currentCollision.AddPoint(curMousePos);
+                pickupPoint(createPoint(curMousePos));
+                return;
             }
-            else
-            {
-                if (pointHovering.Count > 1)
-                {
-                    Point newPoint = pointHovering[pointHovering.Count - 2] as Point;
-                    if (newPoint == selectedPoint)
-                    {
-                        dropMoving();
-                        return;
-                    }
-
-                    movingSegment.PointB = newPoint;
-                    movingPoint.QueueFree();
-                    movingPoint = null;
-                    movingSegment = null;
-                    selectedPoint = null;
-                    return;
-
-                }
-                selectedPoint = movingPoint;
-            }
-
-            movingPoint = currentCollision.AddPoint(curMousePos);
-            movingSegment = currentCollision.AddSegment(selectedPoint, movingPoint);
-
-
-
+            return;
         }
 
         if (@event.IsActionPressed("token_interact_secondary"))
         {
-            if (selectedPoint != null)
+            if (creatingWall)
             {
-                dropMoving();
+                cancelWall();
+                creatingWall = false;
                 return;
             }
             if (pointHovering.Count > 0)
             {
-                (pointHovering[0] as Point).Delete();
-
+                removePoint(pointHovering[0] as Point);
+                movingPoint = null;
             }
-
-
-
+            return;
         }
 
         if (@event.IsActionReleased("token_interact_primary"))
         {
-            if (draggingPoint)
+            if (segmentHovering.Count > 0)
             {
-                if ((curMousePos - curMousePos).Length() < 1)
-                {
-                    selectedPoint = movingPoint;
-                    movingPoint = currentCollision.AddPoint(curMousePos);
-                    movingSegment = currentCollision.AddSegment(selectedPoint, movingPoint);
-                }
-                else
-                {
-                    movingPoint = null;
-                }
-                draggingPoint = false;
-
+                splitSegment(segmentHovering[0] as Segment, curMousePos, movingPoint);
             }
 
+            if (alternativeHold)
+            {
+                if (movingPoint != null)
+                {
+                    creatingWall = true;
+                    selectedPoint = movingPoint;
+                    createWall(curMousePos);
+                }
+                return;
+            }
+            if (movingPoint != null)
+            {
+                movingPoint = null;
+            }
+
+            return;
         }
 
+        if (@event.IsActionPressed("token_alternative_interact"))
+        {
+            alternativeHold = true;
+        }
+
+        if (@event.IsActionReleased("token_alternative_interact"))
+        {
+            alternativeHold = false;
+        }
 
 
     }
 
-    private Point splitSegment(Segment seg, Vector2 pos)
+    private Point splitSegment(Segment seg, Vector2 pos, Point point = null)
     {
         Point tempA = seg.PointA;
         Point tempB = seg.PointB;
-        Point tempNew = currentCollision.AddPoint(pos);
+
+        Point tempNew = point;
+        if (tempNew == null)
+            currentCollision.AddPoint(pos);
+
         currentCollision.AddSegment(tempA, tempNew);
         currentCollision.AddSegment(tempB, tempNew);
         seg.QueueFree();
         return tempNew;
     }
 
-    private void dropMoving()
+    private void cancelWall()
     {
+        if (movingPoint == null || movingSegment == null)
+            return;
         selectedPoint = null;
         movingPoint.QueueFree();
         movingSegment.QueueFree();
@@ -212,7 +183,45 @@ public class CollisionEditor : Node2D
         movingSegment = null;
     }
 
+    private void placeWall()
+    {
+        movingPoint = null;
+        movingSegment = null;
 
+    }
+    private Point createPoint(Vector2 pos)
+    {
+        return currentCollision.AddPoint(curMousePos);
+    }
+
+    private void removePoint(Point point)
+    {
+        point.Delete();
+    }
+
+    private void setToPoint(Point point)
+    {
+        movingSegment.PointB = point;
+        movingPoint.QueueFree();
+        movingPoint = null;
+        movingSegment = null;
+    }
+
+    private void createWall(Vector2 pos)
+    {
+        movingPoint = currentCollision.AddPoint(pos);
+        movingSegment = currentCollision.AddSegment(selectedPoint, movingPoint);
+    }
+
+    private void pickupPoint(Point point)
+    {
+        movingPoint = point;
+        movingPoint.Raise();
+    }
+    private void placePointOnSegment()
+    {
+
+    }
 
 
 }

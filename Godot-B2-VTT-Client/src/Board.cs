@@ -14,6 +14,7 @@ public class Board : Node2D
 	public override void _Ready()
 	{
 		UILayer = GetNode<CanvasLayer>("UILayer");
+		
 	}
 
 //  // Called every frame. 'delta' is the elapsed time since the previous frame.

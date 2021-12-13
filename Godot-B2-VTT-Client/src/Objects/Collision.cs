@@ -51,7 +51,7 @@ public class Collision : Node2D
     public Dictionary<object,object> toDict(){
         return new Dictionary<object,object>() {
             {"Points", pointsToDict()},
-            {"Segments", segemntsToDict()}
+            {"Segments", segmentsToDict()}
         };
 
     }
@@ -66,7 +66,7 @@ public class Collision : Node2D
         return pointsDict;
     }
 
-        private Dictionary<object, object> segemntsToDict(){
+        private Dictionary<object, object> segmentsToDict(){
         Array<Segment> segments = new Array<Segment>(nodeSegments.GetChildren());
         Dictionary<object,object> pointsDict = new Dictionary<object,object>();
         foreach (Segment segment in segments)
