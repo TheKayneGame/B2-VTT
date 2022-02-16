@@ -12,6 +12,11 @@ public class CollisionEditorMenu : WindowDialog
     [Export]
     NodePath collsionSelectorDropdownPath;
 
+    [Export]
+    NodePath testBoxPath;
+
+    TextEdit testBox;
+
     OptionButton collsionSelectorDropdown;
     CollisionEditor collisionEditor;
     Array<Node> collidables;
@@ -20,6 +25,7 @@ public class CollisionEditorMenu : WindowDialog
     {
         collisionEditor = collisionEditorScene.Instance<CollisionEditor>();
         collsionSelectorDropdown = GetNode<OptionButton>(collsionSelectorDropdownPath);
+        testBox = GetNode<TextEdit>(testBoxPath);
         UpdateCollisionDropdown();
 
         GetParent().AddChild(collisionEditor);
@@ -36,7 +42,7 @@ public class CollisionEditorMenu : WindowDialog
 
     public void _onCheckButtonToggled(bool state)
     {
-
+        collisionEditor.Active = state;
     }
 
     public void _onCollisionEditorMenuClose()
@@ -48,6 +54,13 @@ public class CollisionEditorMenu : WindowDialog
     public void _onSavePressed()
     {
         GD.Print(JSON.Print(collisionEditor.currentCollision.toDict()));
+    }
+
+    public void _onLoadPressed()
+    {
+        Godot.Collections.Dictionary<string, object> dict = new Godot.Collections.Dictionary<string, object>((Godot.Collections.Dictionary)JSON.Parse(testBox.Text).Result);
+        GD.Print(dict);
+        collisionEditor.currentCollision.fromDict(dict);
     }
 
     public void _onColissionSelected(){

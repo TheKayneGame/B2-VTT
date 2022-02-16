@@ -1,3 +1,4 @@
 {
-    "godot_tools.editor_path": "e:\\Projects\\Programming\\B2-VTT\\Godot_v3.4-stable_mono_win64\\Godot_v3.4-stable_mono_win64.exe"
+    "godot_tools.editor_path": "e:\\Projects\\Programming\\B2-VTT\\Godot_v3.4-stable_mono_win64\\Godot_v3.4-stable_mono_win64.exe",
+    "rpc.enabled": false
 }

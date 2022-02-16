@@ -1,6 +1,5 @@
 using Godot;
 using Godot.Collections;
-using System;
 
 public class Segment : Node2D
 {
@@ -15,18 +14,23 @@ public class Segment : Node2D
         Door,
         SecretDoor
     }
- 
+
     [Export]
     NodePath collsionShapePath;
 
     [Export]
     NodePath lineVisualPath;
 
+    [Export]
+    NodePath lightOccluderPath;
+
     CollisionShape2D collisionShape;
 
     Line2D lineVisual;
+    LightOccluder2D lightOccluder;
 
     RectangleShape2D shape2D;
+    
 
     public bool Opened;
 
@@ -41,7 +45,9 @@ public class Segment : Node2D
         set
         {
             pointA = value;
-            SetPointA(pointA);
+            if (!IsInsideTree())
+                return;
+            SetPointA(value);
         }
     }
 
@@ -52,22 +58,34 @@ public class Segment : Node2D
         set
         {
             pointB = value;
-            SetPointB(pointB);
+            if (!IsInsideTree())
+                return;
+            SetPointB(value);
         }
     }
+
 
     public override void _Ready()
     {
         collisionShape = GetNode<CollisionShape2D>(collsionShapePath);
         lineVisual = GetNode<Line2D>(lineVisualPath);
+        lightOccluder = GetNode<LightOccluder2D>(lightOccluderPath);
+
         shape2D = collisionShape.Shape as RectangleShape2D;
+        if (pointA != null)
+            SetPointA(pointA);
+
+        if (pointB != null)
+            SetPointB(pointB);
+
     }
 
 
     public void SetPointA(Point point)
     {
         UpdateCollisionPosition();
-        lineVisual.SetPointPosition(0, pointA.Position);
+        lineVisual.SetPointPosition(0, point.Position);
+        lightOccluder.Occluder.Polygon = new Vector2[2] {point.Position, lightOccluder.Occluder.Polygon[1]};
 
         if (pointA.IsConnected(nameof(Point.Moved), this, nameof(_OnPointAMoved)))
             PointA.Disconnect(nameof(Point.Moved), this, nameof(_OnPointAMoved));
@@ -84,6 +102,7 @@ public class Segment : Node2D
     {
         UpdateCollisionPosition();
         lineVisual.SetPointPosition(1, pointB.Position);
+        lightOccluder.Occluder.Polygon = new Vector2[2] {lightOccluder.Occluder.Polygon[0], point.Position};
 
         if (pointB.IsConnected(nameof(Point.Moved), this, nameof(_OnPointBMoved)))
             PointB.Disconnect(nameof(Point.Moved), this, nameof(_OnPointBMoved));
@@ -98,12 +117,14 @@ public class Segment : Node2D
     {
         UpdateCollisionPosition();
         lineVisual.SetPointPosition(0, pos);
+        lightOccluder.Occluder.Polygon = new Vector2[2] {pos, pointA.Position};
     }
 
     private void _OnPointBMoved(Vector2 pos)
     {
         UpdateCollisionPosition();
         lineVisual.SetPointPosition(1, pos);
+        lightOccluder.Occluder.Polygon = new Vector2[2] {pointA.Position, pos};
     }
 
     private void UpdateCollisionPosition()
@@ -134,21 +155,12 @@ public class Segment : Node2D
         lineVisual.DefaultColor = Colors.White;
     }
 
-    public Dictionary<object, object> ToDict(){
-        return new Dictionary<object,object>(){
+    public Dictionary<object, object> ToDict()
+    {
+        return new Dictionary<object, object>(){
                     {"PointA", PointA.Name},
                     {"PointB", PointB.Name}
         };
 
     }
-
-
-
-
-
-    //  // Called every frame. 'delta' is the elapsed time since the previous frame.
-    //  public override void _Process(float delta)
-    //  {
-    //      
-    //  }
 }

@@ -1,6 +1,5 @@
 using Godot;
 using Godot.Collections;
-using System;
 
 public class Point : Position2D
 {
@@ -54,21 +53,18 @@ public class Point : Position2D
         RemoveFromGroup("PointHovering");
     }
 
-    public override void _UnhandledInput(InputEvent @event)
-    {
-
-        if (@event.IsActionReleased("token_interact_primary"))
-        {
-            dragging = false;
-        }
-    }
-
     public Dictionary<object, object> ToDict()
     {
         return new Dictionary<object, object>(){
                     {"PosX", Position.x},
                     {"PosY", Position.y}
         };
+
+    }
+
+    public void FromDict(Dictionary<object, object> dict)
+    {
+        Position = new Vector2((float)dict["PosX"], (float)dict["PosY"]);
 
     }
 

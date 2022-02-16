@@ -4,6 +4,6 @@
     <RootNamespace>GodotB2VTTClient</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Godot.NET.Sdk" Version="4.0.0-dev5" />
+    <PackageReference Include="Godot.NET.Sdk" Version="3.3.0" />
   </ItemGroup>
 </Project>

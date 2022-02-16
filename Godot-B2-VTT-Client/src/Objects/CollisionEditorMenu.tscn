@@ -4,7 +4,6 @@
 [ext_resource path="res://src/Objects/CollisionEditor.tscn" type="PackedScene" id=2]
 
 [node name="CollisionEditorMenu" type="WindowDialog"]
-visible = true
 margin_right = 384.0
 margin_bottom = 320.0
 script = ExtResource( 1 )
@@ -13,6 +12,7 @@ __meta__ = {
 }
 collisionEditorScene = ExtResource( 2 )
 collsionSelectorDropdownPath = NodePath("MarginContainer/HBoxContainer/VBoxContainer/CollsionSelector/Dropdown")
+testBoxPath = NodePath("MarginContainer/HBoxContainer/VBoxContainer/TestBox")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 anchor_right = 1.0
@@ -83,13 +83,34 @@ margin_right = 374.0
 margin_bottom = 20.0
 text = "Select"
 
-[node name="SaveButton" type="Button" parent="MarginContainer/HBoxContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer/VBoxContainer"]
 margin_top = 68.0
 margin_right = 374.0
 margin_bottom = 88.0
+
+[node name="SaveButton" type="Button" parent="MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer"]
+margin_right = 41.0
+margin_bottom = 20.0
 text = "Save"
+
+[node name="LoadButton" type="Button" parent="MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer"]
+margin_left = 45.0
+margin_right = 87.0
+margin_bottom = 20.0
+text = "Load"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TestBox" type="TextEdit" parent="MarginContainer/HBoxContainer/VBoxContainer"]
+margin_top = 92.0
+margin_right = 374.0
+margin_bottom = 310.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 
 [connection signal="popup_hide" from="." to="." method="_onCollisionEditorMenuClose"]
 [connection signal="toggled" from="MarginContainer/HBoxContainer/VBoxContainer/EditorEnabled/CheckButton" to="." method="_onCheckButtonToggled"]
 [connection signal="pressed" from="MarginContainer/HBoxContainer/VBoxContainer/CollsionSelector/Button" to="." method="_onColissionSelected"]
-[connection signal="pressed" from="MarginContainer/HBoxContainer/VBoxContainer/SaveButton" to="." method="_onSavePressed"]
+[connection signal="pressed" from="MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/SaveButton" to="." method="_onSavePressed"]
+[connection signal="pressed" from="MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/LoadButton" to="." method="_onLoadPressed"]

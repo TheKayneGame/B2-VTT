@@ -1,7 +1,6 @@
 using Godot;
 //using System.Collections;
 using Godot.Collections;
-using System.Linq;
 
 public class CollisionEditor : Node2D
 {
@@ -17,6 +16,8 @@ public class CollisionEditor : Node2D
     NodePath MouseColliderPath;
 
     public Collision currentCollision;
+
+    public bool Active = false;
 
     Point selectedPoint;
 
@@ -67,7 +68,28 @@ public class CollisionEditor : Node2D
         //Een segment bepaald voor zich zelf wat hij is en wat hij doet (is hij deur is hij raam, open of dicht) makkelijk te serialiseren.
         //tl;dr wolk van nodes met segmenten die ze verbinden. Tot morgen :)
 
-        //todo Add Existing connection check
+        //todo Add Existing connection check.
+        //todo STATEMACHINEEE!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+        /*
+        Create Point
+        Create Segemnt between points
+        Drag Point
+        Remove Point
+        
+        Remove Segment
+        Split Segment
+
+        */
+        if (!Active)
+        {
+            if (creatingWall)
+            {
+                cancelWall();
+                creatingWall = false;
+            }
+            return;
+        }
 
         curMousePos = currentCollision.GetLocalMousePosition();
 
@@ -88,8 +110,8 @@ public class CollisionEditor : Node2D
                     setToPoint(pointHovering[0] as Point);
             }
 
-            
-            if (pointHovering.Count > 0)
+
+            if (pointHovering.Count == 1)
             {
                 pickupPoint(pointHovering[0] as Point);
                 return;
@@ -111,23 +133,29 @@ public class CollisionEditor : Node2D
                 creatingWall = false;
                 return;
             }
+
             if (pointHovering.Count > 0)
             {
                 removePoint(pointHovering[0] as Point);
                 movingPoint = null;
+                return;
             }
-            return;
+
         }
 
         if (@event.IsActionReleased("token_interact_primary"))
         {
-            if (segmentHovering.Count > 0)
-            {
-                splitSegment(segmentHovering[0] as Segment, curMousePos, movingPoint);
-            }
+
 
             if (alternativeHold)
             {
+                if (segmentHovering.Count > 0)
+                {
+                    
+                    selectedPoint = splitSegment(segmentHovering[0] as Segment, curMousePos, movingPoint);
+                    return;
+                }
+
                 if (movingPoint != null)
                 {
                     creatingWall = true;
@@ -218,10 +246,5 @@ public class CollisionEditor : Node2D
         movingPoint = point;
         movingPoint.Raise();
     }
-    private void placePointOnSegment()
-    {
-
-    }
-
 
 }
